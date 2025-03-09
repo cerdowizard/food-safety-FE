@@ -25,7 +25,7 @@ const MainLayout = () => {
         <Header />
         <Sidebar className="w-64 sm:translate-x-0" />
         <main className="p-4 md:ml-64 pt-16">
-          <Outlet /> {/* Renders the nested route component */}
+          <Outlet /> 
         </main>
       </div>
       <Footer />
