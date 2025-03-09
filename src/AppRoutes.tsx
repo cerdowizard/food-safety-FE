@@ -1,4 +1,3 @@
-// src/AppRoutes.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import MainLayout from "./layouts/MainLayout";
