@@ -1,4 +1,3 @@
-// Base user interface after successful authentication
 export interface UserI {
   id: string;
   first_name: string;
