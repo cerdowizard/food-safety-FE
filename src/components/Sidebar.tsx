@@ -5,7 +5,6 @@ import {
   Bell,
   Settings,
   X,
-  Menu,
   FileText,
   GraduationCap,
   UserCircle,
