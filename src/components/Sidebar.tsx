@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   LayoutDashboard,
   Bell,
@@ -62,11 +62,6 @@ const Sidebar = ({ className }: SidebarProps) => {
       badge: "3",
       badgeColor: "bg-red-500 text-white",
     },
-    {
-      title: "Settings",
-      icon: <Settings className="w-5 h-5" />,
-      path: "/settings",
-    },
   ];
 
   const profileItems: NavItem[] = [
@@ -88,31 +83,15 @@ const Sidebar = ({ className }: SidebarProps) => {
 
   return (
     <>
-
       {/* Sidebar */}
       <div
-        className={`fixed md:flex hidden left-0 top-0 right-0 z-40 h-screen transition-transform duration-300 transform
+        className={`fixed md:flex hidden left-0 top-0 right-0 border-slate-200  border-r z-40 h-screen transition-transform duration-300 transform
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           ${className}`}
       >
-        <div className="h-full px-4 py-20 overflow-y-auto bg-white  border-gray-200">
-          {/* Mobile User Profile Section */}
-          <div className="md:hidden mb-6 pb-6 border-b border-gray-200">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                <span className="text-white text-lg font-semibold">MO</span>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  Muiz Oyetola
-                </p>
-                <p className="text-xs text-gray-500">oyetolamuiz@gmail.com</p>
-              </div>
-            </div>
-          </div>
-
+        <div className="h-full w-full px-4 py-20 overflow-y-auto bg-white  border-gray-200">
           {/* Navigation Items */}
-          <ul className="  space-y-3">
+          <ul className="  space-y-3 ">
             {navItems.map((item, index) => (
               <li key={index}>
                 <a
@@ -183,31 +162,66 @@ const Sidebar = ({ className }: SidebarProps) => {
             </ul>
           </div>
 
-          {/* Beta Alert */}
-          <div className="mt-6 p-4 rounded-lg bg-green-50" role="alert">
-            <div className="flex items-center mb-3">
-              <span className="bg-orange-100 text-orange-800 text-sm font-semibold px-2.5 py-0.5 rounded-sm">
-                Beta
-              </span>
+          {/*settings and beta  */}
+          <div className="fixed gap-4 bottom-6 left-4 right-4 flex flex-col">
+            {/* Beta Alert */}
+            <div className="p-4 rounded-lg bg-green-50" role="alert">
+              <div className="flex items-center mb-3">
+                <span className="bg-orange-100 text-orange-800 text-sm font-semibold px-2.5 py-0.5 rounded-sm">
+                  Beta
+                </span>
+                <button
+                  onClick={() => {
+                    /* Add close functionality */
+                  }}
+                  className="ml-auto text-green-900 hover:bg-blue-200 rounded-lg p-1.5"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-sm text-green-800">
+                Preview the new Food Safety dashboard navigation! You can turn
+                it off in your profile.
+              </p>
+              <a
+                href="#"
+                className="mt-2 inline-block text-sm text-green-800 underline hover:text-blue-900"
+              >
+                Turn new navigation off
+              </a>
+            </div>
+
+            {/* Settings and Sign out */}
+            <div className="flex flex-col gap-2">
+              <Link
+                to="/settings"
+                className={`flex items-center p-2 rounded-lg group transition-colors duration-200
+
+                      bg-gray-50 text-gray-700 hover:bg-gray-100
+                  `}
+              >
+                <Settings
+                  className={`w-5 h-5 ${
+                    location.pathname === "/settings"
+                      ? "text-white"
+                      : "text-gray-600 group-hover:text-gray-900"
+                  }`}
+                />
+                <span className="ml-3 flex-1">Settings</span>
+              </Link>
+
               <button
                 onClick={() => {
-                  /* Add close functionality */
+                  // Add your logout logic here
                 }}
-                className="ml-auto text-green-900 hover:bg-blue-200 rounded-lg p-1.5"
+                className="flex items-center w-full p-2 rounded-lg
+                  bg-rose-50 text-rose-600 hover:bg-rose-100
+                  transition-colors duration-200"
               >
-                <X className="w-4 h-4" />
+                <LogOut className="h-5 w-5 mr-3" />
+                <span>Sign out</span>
               </button>
             </div>
-            <p className="text-sm text-green-800">
-              Preview the new Food Safety dashboard navigation! You can turn it
-              off in your profile.
-            </p>
-            <a
-              href="#"
-              className="mt-2 inline-block text-sm text-green-800 underline hover:text-blue-900"
-            >
-              Turn new navigation off
-            </a>
           </div>
         </div>
       </div>

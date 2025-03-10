@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const AuthLayout = () => {
   return (
-    <div className=" w-full" >
+    <div className=" w-full  " >
       <Outlet /> {/* Renders the nested route component */}
     </div>
   );
