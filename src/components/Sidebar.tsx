@@ -9,6 +9,7 @@ import {
   GraduationCap,
   UserCircle,
   LogOut,
+  ListCheck,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -39,6 +40,12 @@ const Sidebar = ({ className }: SidebarProps) => {
       icon: <FileText className="w-5 h-5" />,
       path: "/reports",
       badge: "4",
+      badgeColor: "bg-red-500 text-white",
+    },
+    {
+      title: "Checklist",
+      icon: <ListCheck className="w-5 h-5" />,
+      path: "/checklist",
       badgeColor: "bg-red-500 text-white",
     },
     {
@@ -105,7 +112,7 @@ const Sidebar = ({ className }: SidebarProps) => {
           </div>
 
           {/* Navigation Items */}
-          <ul className="  space-y-2">
+          <ul className="  space-y-3">
             {navItems.map((item, index) => (
               <li key={index}>
                 <a

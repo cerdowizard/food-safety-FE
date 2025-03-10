@@ -29,6 +29,7 @@ import {
   LayoutDashboard,
   FileText,
   GraduationCap,
+  ListCheck,
 } from "lucide-react";
 import UserDataContext from "../contexts/UserDataContext";
 import { UserI } from "../types/auth/user.type";
@@ -68,6 +69,12 @@ const Header = () => {
       icon: <FileText className="w-5 h-5" />,
       path: "/reports",
       badge: "4",
+      badgeColor: "bg-red-500 text-white",
+    },
+    {
+      title: "Checklist",
+      icon: <ListCheck className="w-5 h-5" />,
+      path: "/checklist",
       badgeColor: "bg-red-500 text-white",
     },
     {

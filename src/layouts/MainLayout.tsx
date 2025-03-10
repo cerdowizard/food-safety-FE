@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import Footer from "../components/Footer";
 import UserDataContext from "../contexts/UserDataContext";
 import authStore from "../stores/authStore";
 import { UserI } from "../types/auth/user.type";
@@ -25,10 +24,9 @@ const MainLayout = () => {
         <Header />
         <Sidebar className="w-64 sm:translate-x-0" />
         <main className="p-4 md:ml-64 pt-16">
-          <Outlet /> 
+          <Outlet />
         </main>
       </div>
-      <Footer />
     </UserDataContext.Provider>
   );
 };
