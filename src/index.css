@@ -19,5 +19,59 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-image: linear-gradient(to bottom right, rgb(240, 253, 244), rgb(220, 252, 231));
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(240, 253, 244),
+    rgb(220, 252, 231)
+  );
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background-color: white;
+  transition: all 0.2s ease-in-out;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #059669;
+  border-color: #059669;
+  box-shadow: none;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  display: block;
+}
+
+input[type="checkbox"]:focus:not(:checked) {
+  box-shadow: 0 0 0 2px #34d399;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
