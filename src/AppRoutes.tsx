@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import LoadingSpinner from "./components/LoadingSpinner";
+import Checklist from "./pages/Checklist";
 
 // Lazy load pages for better performance
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
@@ -31,6 +32,7 @@ const AppRoutes = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/training" element={<TrainingPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/checklist" element={<Checklist />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/notifications" element={<NotificationPage />} />
           </Route>

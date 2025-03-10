@@ -1,6 +1,6 @@
 const ReportsPage = () => {
   return (
-    <div>ReportsPage</div>
+    <div className="bg-white">ReportsPage</div>
   )
 }
 export default ReportsPage
