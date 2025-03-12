@@ -125,7 +125,7 @@ const Checklist = () => {
         {/* Location */}
 
         {/* Dashboard Overview */}
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Score Card */}
           <ScoreCard
             score={score}
@@ -250,7 +250,7 @@ const Checklist = () => {
         )}
 
         {/* Checklist Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-6">
           {filterTasks().map(item => (
             <div
               id={`task-${item.id}`}

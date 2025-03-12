@@ -1,6 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import UserDataContext from "../contexts/UserDataContext";
-import { mockApiService, Task, Reminder } from "../services/adminMockApi";
+import {
+  mockApiService,
+  // Reminder
+} from "../services/mock/adminMockApi";
+import adminStore, { Task } from "../stores/adminStore";
+
 import {
   ClipboardCheck,
   ThermometerSun,
@@ -10,7 +15,7 @@ import {
   BookOpen,
   Check,
   AlertCircle,
-  X,
+  // X,
 } from "lucide-react";
 import { UserI } from "../types/auth/user.type";
 import QuickActionButton from "../components/QuickActionButton";
@@ -22,9 +27,10 @@ interface FreezerType {
 }
 
 const DashboardPage = () => {
+  const { fetchTasks } = adminStore();
   const user = useContext<UserI | null>(UserDataContext);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [reminders, setReminders] = useState<Reminder[]>([]);
+  // const [reminders, setReminders] = useState<Reminder[]>([]);
   // const [isLoading, setIsLoading] = useState(true);
 
   // Add this to your component, after the existing state declarations
@@ -44,12 +50,13 @@ const DashboardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [tasksData, remindersData] = await Promise.all([
-          mockApiService.getTasks(),
-          mockApiService.getReminders(),
-        ]);
-        setTasks(tasksData);
-        setReminders(remindersData);
+        // const [tasksData, remindersData] = await Promise.all([
+        //   mockApiService.getTasks(),
+        //   mockApiService.getReminders(),
+        // ]);
+        const response: Task[] = await fetchTasks();
+        setTasks(response);
+        // setReminders(remindersData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -58,7 +65,7 @@ const DashboardPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [fetchTasks]);
 
   const handleTaskCompletion = async (taskId: string) => {
     try {
@@ -297,7 +304,7 @@ const DashboardPage = () => {
               </div>
               <div className="p-4">
                 <div className="space-y-3">
-                  {reminders.map(reminder => (
+                  {/*  {reminders.map(reminder => (
                     <div
                       key={reminder.id}
                       className="flex p-3 bg-amber-50 rounded-lg"
@@ -320,7 +327,7 @@ const DashboardPage = () => {
                         <X className="h-4 w-4" />
                       </button>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
               </div>
             </div>
