@@ -6,7 +6,7 @@ import {
 } from "../types/auth/user.type";
 // import axios from "../services/api";
 // import Cookies from "js-cookie";
-import fakeAuthAPI from "../services/fakeAuthAPI";
+import fakeAuthAPI from "../services/mock/authMockAPI";
 
 export interface AuthStoreI {
   user: UserI | null;

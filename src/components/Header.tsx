@@ -262,7 +262,7 @@ const Header = () => {
           {/* Mobile User Profile */}
           <div className="px-4 py-3 border-b border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
                 <span className="text-white text-lg font-semibold">
                   {user?.first_name?.[0]}
                   {user?.last_name?.[0]}

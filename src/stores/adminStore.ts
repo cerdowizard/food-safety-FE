@@ -1,4 +1,5 @@
-import {create} from 'zustand';
+import { create } from "zustand";
+import { mockApiService } from "../services/mock/adminMockApi";
 
 // Types
 export interface Task {
@@ -7,7 +8,7 @@ export interface Task {
   isCompleted: boolean;
   dueTime?: string;
   assignedBy: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   reminder?: {
     message: string;
     time: string;
@@ -21,60 +22,19 @@ interface AdminStore {
   error: string | null;
 
   // Actions
-  fetchTasks: () => Promise<void>;
-  addTask: (task: Omit<Task, 'id'>) => Promise<void>;
+  fetchTasks: () => Promise<Task[]>;
+  addTask: (task: Omit<Task, "id">) => Promise<void>;
   updateTaskStatus: (taskId: string, isCompleted: boolean) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
-  addReminder: (taskId: string, reminder: { message: string; time: string }) => Promise<void>;
+  addReminder: (
+    taskId: string,
+    reminder: { message: string; time: string }
+  ) => Promise<void>;
 }
 
-// Mock data
-const mockTasks: Task[] = [
-  {
-    id: "1",
-    title: "Sanitize countertops",
-    isCompleted: false,
-    assignedBy: "John Manager",
-    priority: "high",
-    reminder: {
-      message: "Don't forget to sanitize all food prep surfaces",
-      time: "10:00 AM"
-    }
-  },
-  {
-    id: "2",
-    title: "Check fridge temperature",
-    isCompleted: false,
-    assignedBy: "John Manager",
-    priority: "high",
-    reminder: {
-      message: "Record temperature in all fridges",
-      time: "11:00 AM"
-    }
-  },
-  {
-    id: "3",
-    title: "Empty trash bins",
-    isCompleted: false,
-    dueTime: "8:00 PM",
-    assignedBy: "Sarah Supervisor",
-    priority: "medium",
-    reminder: {
-      message: "Remember to empty all trash bins",
-      time: "8:00 PM"
-    }
-  },
-  {
-    id: "4",
-    title: "Inspect for pests",
-    isCompleted: false,
-    assignedBy: "Sarah Supervisor",
-    priority: "medium"
-  }
-];
-
 // Create store
-const useAdminStore = create<AdminStore>((set) => ({
+const useAdminStore = create<AdminStore>(set => ({
+  // Tasks state--------------------------
   tasks: [],
   isLoading: false,
   error: null,
@@ -83,31 +43,33 @@ const useAdminStore = create<AdminStore>((set) => ({
   fetchTasks: async () => {
     set({ isLoading: true, error: null });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      set({ tasks: mockTasks });
+      const response = await mockApiService.getTasks();
+      return response;
+      set({ tasks: response });
     } catch (error) {
-      set({ error: 'Failed to fetch tasks' });
+      console.error("Error fetching tasks:", error);
+      set({ error: "Failed to fetch tasks" });
+      return [];
     } finally {
       set({ isLoading: false });
     }
   },
 
   // Add new task
-  addTask: async (task: Omit<Task, 'id'>) => {
+  addTask: async (task: Omit<Task, "id">) => {
     set({ isLoading: true, error: null });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 300));
+      //TODO:  Simulate API call
+      const response = await mockApiService.createTask(task);
       const newTask = {
-        ...task,
-        id: Date.now().toString()
+        ...response,
+        id: Date.now().toString(),
       };
       set(state => ({
-        tasks: [...state.tasks, newTask]
+        tasks: [...state.tasks, newTask],
       }));
     } catch (error) {
-      set({ error: 'Failed to add task' });
+      set({ error: "Failed to add task" });
     } finally {
       set({ isLoading: false });
     }
@@ -117,15 +79,21 @@ const useAdminStore = create<AdminStore>((set) => ({
   updateTaskStatus: async (taskId: string, isCompleted: boolean) => {
     set({ isLoading: true, error: null });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // TODO: Simulate API call
+      const response = await mockApiService.updateTaskStatus(
+        taskId,
+        isCompleted
+      );
+
       set(state => ({
         tasks: state.tasks.map(task =>
-          task.id === taskId ? { ...task, isCompleted } : task
-        )
+          task.id === response.id
+            ? { ...task, isCompleted: response.isCompleted }
+            : task
+        ),
       }));
     } catch (error) {
-      set({ error: 'Failed to update task' });
+      set({ error: "Failed to update task" });
     } finally {
       set({ isLoading: false });
     }
@@ -135,35 +103,44 @@ const useAdminStore = create<AdminStore>((set) => ({
   deleteTask: async (taskId: string) => {
     set({ isLoading: true, error: null });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 300));
+      //TODO:  Simulate API call
+      await mockApiService.deleteTask(taskId);
       set(state => ({
-        tasks: state.tasks.filter(task => task.id !== taskId)
+        tasks: state.tasks.filter(task => task.id !== taskId),
       }));
     } catch (error) {
-      set({ error: 'Failed to delete task' });
+      set({ error: "Failed to delete task" });
     } finally {
       set({ isLoading: false });
     }
   },
 
   // Add reminder to task
-  addReminder: async (taskId: string, reminder: { message: string; time: string }) => {
+  addReminder: async (
+    taskId: string,
+    reminder: { message: string; time: string }
+  ) => {
     set({ isLoading: true, error: null });
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 300));
+      //TODO:  Simulate API call
+      const response = await mockApiService.createReminder({
+        ...reminder,
+        taskId,
+        isActive: true,
+        createdBy: "system",
+      });
+
       set(state => ({
         tasks: state.tasks.map(task =>
-          task.id === taskId ? { ...task, reminder } : task
-        )
+          task.id === response.taskId ? { ...task, reminder: response } : task
+        ),
       }));
     } catch (error) {
-      set({ error: 'Failed to add reminder' });
+      set({ error: "Failed to add reminder" });
     } finally {
       set({ isLoading: false });
     }
-  }
+  },
 }));
 
 export default useAdminStore;

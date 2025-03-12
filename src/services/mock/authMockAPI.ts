@@ -1,4 +1,4 @@
-import { LoginPayloadI, RegisterPayloadI } from "../types/auth/user.type";
+import { LoginPayloadI, RegisterPayloadI } from "../../types/auth/user.type";
 
 const fakeAuthAPI = {
   signin: async (payload: LoginPayloadI) => {

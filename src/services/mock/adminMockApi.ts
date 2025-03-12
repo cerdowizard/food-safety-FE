@@ -83,6 +83,29 @@ export const mockApiService = {
     });
   },
 
+  createTask: async (task: Omit<Task, 'id' | 'isCompleted' | 'createdAt'>): Promise<Task> => {
+    return new Promise((resolve) => {
+      const newTask: Task = {
+        ...task,
+        id: Date.now().toString(),
+        isCompleted: false,
+        createdAt: new Date().toISOString()
+      };
+      mockTasks.push(newTask);
+      setTimeout(() => resolve(newTask), 300);
+    });
+  },
+
+  deleteTask: async (taskId: string): Promise<void> => {
+    return new Promise((resolve) => {
+      const index = mockTasks.findIndex(t => t.id === taskId);
+      if (index !== -1) {
+        mockTasks.splice(index, 1);
+      }
+      setTimeout(resolve, 300);
+    });
+  },
+
   // Reminders
   getReminders: async (): Promise<Reminder[]> => {
     return new Promise((resolve) => {
