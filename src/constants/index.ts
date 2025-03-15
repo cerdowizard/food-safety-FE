@@ -3,11 +3,13 @@ import heroCourse2 from "../assets/heroCourse2.jpg";
 import heroCourse3 from "../assets/heroCourse3.jpg";
 import heroCourse4 from "../assets/heroCourse4.jpg";
 
+// Base interface for content sections
 interface ContentData {
   title: string;
   description: string;
 }
 
+// Landing page content for non-authenticated users
 export const contentData: ContentData[] = [
   {
     title: "Welcome to Food Safety",
@@ -27,6 +29,7 @@ export const contentData: ContentData[] = [
   },
 ];
 
+// Landing page content for authenticated users
 export const contentDataLogin: ContentData[] = [
   {
     title: "Welcome Back",
@@ -46,15 +49,17 @@ export const contentDataLogin: ContentData[] = [
   },
 ];
 
+// Interface defining the structure of a training course
 export interface TrainingCourse {
   id: number;
   title: string;
   description: string;
-  duration: string;
+  duration: string; // Format: "X.X hours"
   level: "Beginner" | "Intermediate" | "Advanced";
   image: string;
 }
 
+// Collection of all available training courses
 export const trainingCourses: TrainingCourse[] = [
   {
     id: 1,
@@ -62,7 +67,7 @@ export const trainingCourses: TrainingCourse[] = [
     description:
       "Learn the essential principles of food safety and hygiene in commercial kitchens",
     duration: "2 hours",
-    level: "Beginner",
+    level: "Beginner", // Perfect for new staff members
     image: heroCourse1,
   },
   {
@@ -71,7 +76,7 @@ export const trainingCourses: TrainingCourse[] = [
     description:
       "Master the critical aspects of temperature control in food storage and preparation",
     duration: "1.5 hours",
-    level: "Intermediate",
+    level: "Intermediate", // For staff with basic knowledge
     image: heroCourse2,
   },
   {
@@ -80,7 +85,7 @@ export const trainingCourses: TrainingCourse[] = [
     description:
       "Advanced techniques to prevent cross-contamination in food handling",
     duration: "2.5 hours",
-    level: "Advanced",
+    level: "Advanced", // For experienced food handlers
     image: heroCourse3,
   },
   {
@@ -89,27 +94,29 @@ export const trainingCourses: TrainingCourse[] = [
     description:
       "Comprehensive guide to cleaning and sanitizing food preparation areas",
     duration: "2 hours",
-    level: "Intermediate",
+    level: "Intermediate", // Builds on basic knowledge
     image: heroCourse4,
   },
 ];
 
-// Add this to your existing types
+// Interface extending TrainingCourse with user-specific data
 export interface PurchasedCourse extends TrainingCourse {
-  progress: number;
-  lastAccessed: string;
+  progress: number; // Percentage of course completion (0-100)
+  lastAccessed: string; // ISO 8601 datetime format
+  completed?: boolean;
 }
 
-// Add this to your constants
+// Mock data for user's purchased courses with progress tracking
 export const purchasedCourses: PurchasedCourse[] = [
   {
-    ...trainingCourses[0],
-    progress: 60,
+    ...trainingCourses[0], // Food Safety Fundamentals
+    progress: 100, // 60% completed
     lastAccessed: "2024-03-10T09:00:00Z",
+    completed: true,
   },
   {
-    ...trainingCourses[2],
-    progress: 25,
+    ...trainingCourses[2], // Cross-Contamination Prevention
+    progress: 25, // 25% completed
     lastAccessed: "2024-03-09T14:30:00Z",
   },
 ];

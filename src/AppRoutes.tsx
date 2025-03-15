@@ -4,6 +4,7 @@ import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import LoadingSpinner from "./components/LoadingSpinner";
 import Checklist from "./pages/Checklist";
+import ProfilePage from "./pages/ProfilePage";
 
 // Lazy load pages for better performance
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
@@ -35,6 +36,7 @@ const AppRoutes = () => {
             <Route path="/checklist" element={<Checklist />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="/notifications" element={<NotificationPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           {/* 404 Page */}
