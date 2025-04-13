@@ -6,6 +6,18 @@ import display6 from "../../assets/display6.jpg";
 import display8 from "../../assets/display8.jpg";
 import display9 from "../../assets/display9.jpg";
 import { contentDataLogin } from "../../constants";
+import axiosInstance from "../../services/real/api.ts";
+import {toast} from "react-toastify";
+import {AxiosError} from "axios";
+
+interface LoginPayload {
+  email : string,
+  password: string
+}
+
+interface ErrorResponse {
+  message: string
+}
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -28,7 +40,7 @@ const LoginPage = () => {
     return () => clearInterval(textInterval);
   }, []);
 
-  const [payload, setPayload] = useState({
+  const [payload, setPayload] = useState<LoginPayload>({
     email: "",
     password: "",
   });
@@ -44,18 +56,17 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Create the login payload that matches backend expectations
-      /*const loginPayload = {
-         email: payload.email,
-         password: payload.password,
-       };*/
-
       // Add your API call here
-      // const response = await api.post('/api/auth/login', loginPayload);
+      console.log('clicked')
+      const response = await axiosInstance.post('/api/v1/login', payload);
+      toast.success(response?.data.message)
+      console.log(response?.data.message)
 
       // If login successful
       navigate("/dashboard"); // or your desired route
-    } catch (err) {
+    } catch (error) {
+      const err = error as AxiosError<ErrorResponse>
+      toast.error(err.message)
       setError("Invalid email or password");
     }
   };
@@ -177,7 +188,7 @@ const LoginPage = () => {
             <div className="lg:hidden absolute -top-4 -right-4 w-24 h-24 bg-green-500/10 rounded-full blur-2xl"></div>
             <div className="lg:hidden absolute -bottom-4 -left-4 w-32 h-32 bg-green-500/10 rounded-full blur-2xl"></div>
 
-            <form className="space-y-6 relative" onSubmit={handleSubmit}>
+            <form className="space-y-6 relative" >
               {/* Email Input */}
               <div>
                 <label
@@ -259,6 +270,7 @@ const LoginPage = () => {
 
               <div>
                 <button
+                    onClick={handleSubmit}
                   type="submit"
                   className="w-full flex justify-center py-4 sm:py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-xl font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95"
                 >
