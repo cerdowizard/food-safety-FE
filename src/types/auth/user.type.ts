@@ -17,14 +17,30 @@ export interface LoginPayloadI {
 
 // Registration payload interface
 export interface RegisterPayloadI {
-  first_name: string;
-  last_name: string;
-  email: string;
-  address: string;
-  city: string;
-  state: string;
-  password: string;
-  confirmPassword: string;
+  "name": string,
+  "address": string,
+  "phone": string,
+  "email": string,
+  "user_email": string,
+  "password": string,
+  "first_name": string,
+  "last_name": string
+  confirmPassword? : string
+}
+
+export interface RegisterUserPayloadI{
+  "org_id": string,
+  "email": string,
+  "password": string,
+  "first_name": string,
+  "last_name": string,
+  "phone": string,
+  "address": string,
+  "city": string,
+  "state": string,
+  "zip_code": string,
+  "country": string
+  confirmPassword? : string
 }
 
 // Auth store interface

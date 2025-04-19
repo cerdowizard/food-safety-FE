@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Eye, EyeOff, MapPin, Building2 } from "lucide-react";
+import {useNavigate} from "react-router-dom";
+import { User, Mail, Lock, Eye, EyeOff, MapPin } from "lucide-react";
 import display1 from "../../assets/display1.jpg";
 import display2 from "../../assets/display2.jpg";
 import display3 from "../../assets/display3.jpg";
 import display4 from "../../assets/display4.jpg";
 import { contentData } from "../../constants";
+import {RegisterPayloadI} from "../../types/auth/user.type.ts";
+import axiosInstance from '../../services/real/api.ts'
+import {AxiosError} from 'axios'
+import {toast} from "react-toastify";
+
+interface ErrorResponse {
+  message: string;
+}
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -14,6 +22,7 @@ const SignUpPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const images = [display1, display2, display3, display4];
+  const [error, setError] = useState<string|undefined>('')
 
   // Image rotation logic
   useEffect(() => {
@@ -30,17 +39,16 @@ const SignUpPage = () => {
     return () => clearInterval(textInterval);
   }, []);
 
-  const [payload, setPayload] = useState({
+  const [payload, setPayload] = useState<RegisterPayloadI>({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    user_email: "",
+    password: "",
     first_name: "",
     last_name: "",
-    email: "",
-    address: "",
-    city: "",
-    state: "",
-    password: "",
-    confirmPassword: "",
   });
-  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPayload({
@@ -55,8 +63,62 @@ const SignUpPage = () => {
       setError("Passwords do not match");
       return;
     }
-    // Add your signup logic here
+    try {
+      // Destructure only the fields the backend expects
+      const {
+        name,
+        address,
+        phone,
+        email,
+        user_email,
+        password,
+        first_name,
+        last_name
+        // Exclude confirmPassword here
+      } = payload;
+
+      // Create a new object with only the necessary fields
+      const payloadToSend = {
+        name,
+        address,
+        phone,
+        email,
+        user_email,
+        password,
+        first_name,
+        last_name
+      };
+
+      console.log(payloadToSend)
+      const response = await axiosInstance.post('/api/v1/org_create', payloadToSend);
+        toast.success(response.data.message);
+
+        navigate("/auth/login");
+      // Reset original payload state
+      setPayload({
+        name: "",
+        address: "",
+        phone: "",
+        email: "",
+        user_email: "",
+        password: "",
+        confirmPassword: "",
+        first_name: "",
+        last_name: "",
+      });
+
+      setError(undefined); // Clear error on success
+
+    } catch (error) {
+      // This will catch network errors or 500-type server errors
+      const err = error as AxiosError<ErrorResponse>;
+      // Try to get the error message from the response if it exists
+      const errorMessage = err.response?.data?.message || err.message;
+      toast.error(errorMessage);
+      setError(errorMessage);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex">
@@ -165,7 +227,7 @@ const SignUpPage = () => {
             </div> */}
           </div>
           <h2 className="text-center text-4xl font-extrabold text-gray-900 tracking-tight">
-            Create your account
+            Create Organization account
           </h2>
           <p className="mt-2 text-center text-base text-gray-600">
             Join us today and get started
@@ -181,8 +243,33 @@ const SignUpPage = () => {
             {/* Update form spacing for mobile */}
             <form
               className="space-y-4 sm:space-y-6 relative"
-              onSubmit={handleSubmit}
+
             >
+              {/* Name Input */}
+              <div>
+                <label
+                    htmlFor="email"
+                    className="block text-base font-medium text-gray-700"
+                >
+                  Organization Name
+                </label>
+                <div className="mt-1 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="text-gray-400 w-5 h-5" />
+                  </div>
+                  <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      className="appearance-none block w-full pl-10 px-3 py-3.5 sm:py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out text-base"
+                      value={payload.name}
+                      onChange={handleChange}
+                      placeholder="name"
+                  />
+                </div>
+              </div>
+
               {/* Name Fields - Side by Side */}
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {/* First Name Input */}
@@ -261,6 +348,31 @@ const SignUpPage = () => {
                 </div>
               </div>
 
+              {/* User Email Input */}
+              <div>
+                <label
+                    htmlFor="email"
+                    className="block text-base font-medium text-gray-700"
+                >
+                  Admin email address
+                </label>
+                <div className="mt-1 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="text-gray-400 w-5 h-5" />
+                  </div>
+                  <input
+                      id="user_email"
+                      name="user_email"
+                      type="email"
+                      required
+                      className="appearance-none block w-full pl-10 px-3 py-3.5 sm:py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out text-base"
+                      value={payload.user_email}
+                      onChange={handleChange}
+                      placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
               {/* Address Input */}
               <div>
                 <label
@@ -286,58 +398,31 @@ const SignUpPage = () => {
                 </div>
               </div>
 
-              {/* City and State Fields - Side by Side */}
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                {/* City Input */}
-                <div>
-                  <label
-                    htmlFor="city"
+              {/* Phone Number Input */}
+              <div>
+                <label
+                    htmlFor="address"
                     className="block text-base font-medium text-gray-700"
-                  >
-                    City
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Building2 className="text-gray-400 w-5 h-5" />
-                    </div>
-                    <input
-                      id="city"
-                      name="city"
+                >
+                  Phone Number
+                </label>
+                <div className="mt-1 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MapPin className="text-gray-400 w-5 h-5" />
+                  </div>
+                  <input
+                      id="phone"
+                      name="phone"
                       type="text"
                       required
                       className="appearance-none block w-full pl-10 px-3 py-3.5 sm:py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out text-base"
-                      value={payload.city}
+                      value={payload.phone}
                       onChange={handleChange}
-                      placeholder="New York"
-                    />
-                  </div>
-                </div>
-
-                {/* State Input */}
-                <div>
-                  <label
-                    htmlFor="state"
-                    className="block text-base font-medium text-gray-700"
-                  >
-                    State
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <MapPin className="text-gray-400 w-5 h-5" />
-                    </div>
-                    <input
-                      id="state"
-                      name="state"
-                      type="text"
-                      required
-                      className="appearance-none block w-full pl-10 px-3 py-3.5 sm:py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out text-base"
-                      value={payload.state}
-                      onChange={handleChange}
-                      placeholder="NY"
-                    />
-                  </div>
+                      placeholder="123 456 789"
+                  />
                 </div>
               </div>
+
 
               {/* Password Input */}
               <div>
@@ -420,6 +505,7 @@ const SignUpPage = () => {
               <div>
                 <button
                   type="submit"
+                  onClick={handleSubmit}
                   className="w-full flex justify-center py-4 sm:py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-xl font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95"
                 >
                   Create Account

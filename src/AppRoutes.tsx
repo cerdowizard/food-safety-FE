@@ -16,7 +16,8 @@ const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const NotificationPage = lazy(() => import("./pages/NotificationPage"));
 const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
-
+const SignUpUser = lazy(() => import("./pages/auth/SignUpUser"));
+const AdminGetCheckList = lazy(() => import("./pages/AdminGetCheckList"));
 const AppRoutes = () => {
   return (
     <Router>
@@ -26,6 +27,8 @@ const AppRoutes = () => {
           <Route element={<AuthLayout />}>
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/sign-up" element={<SignUpPage />} />
+            <Route path="/auth/admin/sign-up-user" element={<SignUpUser />} />
+            <Route path="/auth/admin/get-checklist" element={<AdminGetCheckList />} />
           </Route>
 
           {/* Protected Routes */}
