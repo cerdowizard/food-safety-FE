@@ -56,18 +56,26 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Add your API call here
-      console.log('clicked')
+      console.log('clicked');
       const response = await axiosInstance.post('/api/v1/login', payload);
-      toast.success(response?.data.message)
-      console.log(response?.data.message)
 
-      // If login successful
-      navigate("/dashboard"); // or your desired route
+      // Check if the request was successful according to your API's definition
+      if (response.data.is_success) {
+        toast.success(response.data.message);
+        console.log(response);
+        navigate("/dashboard");
+      } else {
+        // This is when the API returns is_success: false
+        toast.error(response.data.message);
+        setError(response.data.message);
+      }
     } catch (error) {
-      const err = error as AxiosError<ErrorResponse>
-      toast.error(err.message)
-      setError("Invalid email or password");
+      // This will catch network errors or 500-type server errors
+      const err = error as AxiosError<ErrorResponse>;
+      // Try to get the error message from the response if it exists
+      const errorMessage = err.response?.data?.message || err.message;
+      toast.error(errorMessage);
+      setError(errorMessage);
     }
   };
 

@@ -23,7 +23,6 @@ const SignUpPage = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const images = [display1, display2, display3, display4];
   const [error, setError] = useState<string|undefined>('')
-  const [msg, setMsg] = useState<string>('')
 
   // Image rotation logic
   useEffect(() => {
@@ -90,9 +89,11 @@ const SignUpPage = () => {
         last_name
       };
 
+      console.log(payloadToSend)
       const response = await axiosInstance.post('/api/v1/org_create', payloadToSend);
+        toast.success(response.data.message);
 
-      setMsg(response?.data.message);
+        navigate("/auth/login");
       // Reset original payload state
       setPayload({
         name: "",
@@ -105,15 +106,20 @@ const SignUpPage = () => {
         first_name: "",
         last_name: "",
       });
-      toast.success(msg)
+
       setError(undefined); // Clear error on success
 
     } catch (error) {
+      // This will catch network errors or 500-type server errors
       const err = error as AxiosError<ErrorResponse>;
-      setError(err.response?.data.message);
-      console.log(err.response?.data.message);
+      // Try to get the error message from the response if it exists
+      const errorMessage = err.response?.data?.message || err.message;
+      toast.error(errorMessage);
+      setError(errorMessage);
     }
   };
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex">
       {/* Image Section - Only visible on lg screens */}
@@ -221,7 +227,7 @@ const SignUpPage = () => {
             </div> */}
           </div>
           <h2 className="text-center text-4xl font-extrabold text-gray-900 tracking-tight">
-            Create your account
+            Create Organization account
           </h2>
           <p className="mt-2 text-center text-base text-gray-600">
             Join us today and get started
@@ -245,7 +251,7 @@ const SignUpPage = () => {
                     htmlFor="email"
                     className="block text-base font-medium text-gray-700"
                 >
-                  Name
+                  Organization Name
                 </label>
                 <div className="mt-1 relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -348,7 +354,7 @@ const SignUpPage = () => {
                     htmlFor="email"
                     className="block text-base font-medium text-gray-700"
                 >
-                  User email address
+                  Admin email address
                 </label>
                 <div className="mt-1 relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

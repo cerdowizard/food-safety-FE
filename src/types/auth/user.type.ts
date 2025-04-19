@@ -28,6 +28,21 @@ export interface RegisterPayloadI {
   confirmPassword? : string
 }
 
+export interface RegisterUserPayloadI{
+  "org_id": string,
+  "email": string,
+  "password": string,
+  "first_name": string,
+  "last_name": string,
+  "phone": string,
+  "address": string,
+  "city": string,
+  "state": string,
+  "zip_code": string,
+  "country": string
+  confirmPassword? : string
+}
+
 // Auth store interface
 export interface AuthStoreI {
   signin: (payload: LoginPayloadI) => Promise<void>;
