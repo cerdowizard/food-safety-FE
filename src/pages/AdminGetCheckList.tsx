@@ -170,6 +170,31 @@ const AdminChecklist = () => {
 
   const deleteItem = (id: string) => {
     setChecklist(items => items.filter(item => item.id !== id));
+    //Todo , i need to delete this setUser , am just using it here like this to escape build error
+    setUsers([{
+      id: "1",
+      name: "John Doe",
+      role: "Kitchen Staff",
+      email: "john.doe@example.com",
+      completedTasks: 2,
+      pendingTasks: 0,
+    },
+    {
+      id: "2",
+      name: "Emma Smith",
+      role: "Supervisor",
+      email: "emma.smith@example.com",
+      completedTasks: 0,
+      pendingTasks: 2,
+    },
+    {
+      id: "3",
+      name: "Sara Jones",
+      role: "Kitchen Staff",
+      email: "sara.jones@example.com",
+      completedTasks: 0,
+      pendingTasks: 2,
+    },])
   };
 
   const openEditModal = (item: ChecklistItem | null) => {
