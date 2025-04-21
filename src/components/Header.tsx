@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import UserDataContext from "../contexts/UserDataContext";
 import { UserI } from "../types/auth/user.type";
-import authStore from "../stores/authStore";
+import Cookies from "js-cookie";
 
 // Remove Sidebar import as we're integrating it
 
@@ -51,9 +51,8 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Auth store integration
-  const { signout } = authStore();
   const onLogout = () => {
-    signout();
+    Cookies.remove("token")
     navigate("/auth/login");
   };
 

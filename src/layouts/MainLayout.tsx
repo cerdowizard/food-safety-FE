@@ -2,11 +2,9 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import UserDataContext from "../contexts/UserDataContext";
-import authStore from "../stores/authStore";
 import { UserI } from "../types/auth/user.type";
 
 const MainLayout = () => {
-  const { user } = authStore();
   // Mock user data for development/testing
   const mockUser: UserI = {
     id: "123",
@@ -19,7 +17,7 @@ const MainLayout = () => {
     state: "NY",
   };
   return (
-    <UserDataContext.Provider value={user || (mockUser as UserI | null)}>
+    <UserDataContext.Provider value={(mockUser as UserI | null)}>
       <div className="min-h-screen bg-white  ">
         <Header />
         <Sidebar className="w-64 sm:translate-x-0" />
