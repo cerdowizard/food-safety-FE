@@ -1,13 +1,13 @@
-import { useState, useEffect, useContext } from "react";
-import { trainingCourses, purchasedCourses } from "../constants";
-import { ChevronLeft, ChevronRight} from "lucide-react";
-import UserDataContext from "../contexts/UserDataContext";
+import { useState, useEffect } from "react";
+import { trainingCourses, purchasedCourses } from "../../constants";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useUserData } from "../../contexts/UserDataContext";
 import { Link } from "react-router-dom";
-import CourseCard from "../components/training/CourseCard";
+import CourseCard from "../../components/training/CourseCard";
 
 const TrainingPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const user = useContext(UserDataContext);
+  const { user } = useUserData(); // Use the custom hook to get user data
   const [activeTab, setActiveTab] = useState<"all" | "my-learning">("all");
 
   // Auto-advance carousel
@@ -32,21 +32,18 @@ const TrainingPage = () => {
     <>
       {/* Welcoming message */}
       <div className="flex items-center lg:mx-[3rem] gap-3 mt-[1.5rem]">
-        <div className="lg:h-20 lg:w-20 w-14 h-14    rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
+        <div className="lg:h-20 lg:w-20 w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
           <span className="text-white text-lg font-semibold">
             {user?.first_name?.[0]}
             {user?.last_name?.[0]}
           </span>
         </div>
 
-        <div className="flex flex-col ">
+        <div className="flex flex-col">
           <h1 className="text-2xl lg:text-4xl font-bold text-gray-800">
             Welcome back, {user?.first_name}!
           </h1>
-          <Link
-            className=" underline text-green-500 font-medium"
-            to="/interests"
-          >
+          <Link className="underline text-green-500 font-medium" to="/interests">
             Add interests
           </Link>
         </div>

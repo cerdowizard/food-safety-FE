@@ -1,7 +1,12 @@
+import { UserDataProvider } from './contexts/UserDataContext';
 import AppRoutes from "./AppRoutes";
 
-const App = () => {
-  return <AppRoutes/>
-};
+function App() {
+  return (
+    <UserDataProvider>
+      <AppRoutes/>
+    </UserDataProvider>
+  );
+}
 
 export default App;

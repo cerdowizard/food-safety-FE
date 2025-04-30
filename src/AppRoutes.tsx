@@ -3,21 +3,21 @@ import { Suspense, lazy } from "react";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import LoadingSpinner from "./components/LoadingSpinner";
-import Checklist from "./pages/Checklist";
-import ProfilePage from "./pages/ProfilePage";
-import CourseDetailPage from "./pages/CourseDetailPage";
+import Checklist from "./pages/home/Checklist";
+import ProfilePage from "./pages/home/ProfilePage";
+import CourseDetailPage from "./pages/home/CourseDetailPage";
 
 // Lazy load pages for better performance
-const DashboardPage = lazy(() => import("./pages/DashboardPage"));
-const TrainingPage = lazy(() => import("./pages/TrainingPage"));
-const SettingsPage = lazy(() => import("./pages/SettingsPage"));
-const ReportsPage = lazy(() => import("./pages/ReportsPage"));
+const DashboardPage = lazy(() => import("./pages/home/DashboardPage"));
+const TrainingPage = lazy(() => import("./pages/home/TrainingPage"));
+const SettingsPage = lazy(() => import("./pages/home/SettingsPage"));
+const ReportsPage = lazy(() => import("./pages/home/ReportsPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
-const NotificationPage = lazy(() => import("./pages/NotificationPage"));
+const NotificationPage = lazy(() => import("./pages/home/NotificationPage"));
 const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
 const SignUpUser = lazy(() => import("./pages/auth/SignUpUser"));
-const AdminGetCheckList = lazy(() => import("./pages/AdminGetCheckList"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AppRoutes = () => {
   return (
     <Router>
@@ -27,8 +27,8 @@ const AppRoutes = () => {
           <Route element={<AuthLayout />}>
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/sign-up" element={<SignUpPage />} />
-            <Route path="/auth/admin/sign-up-user" element={<SignUpUser />} />
-            <Route path="/auth/admin/get-checklist" element={<AdminGetCheckList />} />
+            // <Route path="/auth/admin/sign-up-user" element={<SignUpUser />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Route>
 
           {/* Protected Routes */}

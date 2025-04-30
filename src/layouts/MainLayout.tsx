@@ -1,31 +1,26 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { useContext } from "react";
 import UserDataContext from "../contexts/UserDataContext";
-import { UserI } from "../types/auth/user.type";
+import { Navigate } from "react-router-dom";
 
 const MainLayout = () => {
-  // Mock user data for development/testing
-  const mockUser: UserI = {
-    id: "123",
-    email: "test@example.com",
-    first_name: "Muiz",
-    last_name: "Oyetola",
-    role: "USER",
-    address: "123 Main St",
-    city: "New York",
-    state: "NY",
-  };
+  const userData = useContext(UserDataContext);
+
+  // Redirect to login if no user data
+  if (!userData) {
+    return <Navigate to="/auth/login" />;
+  }
+
   return (
-    <UserDataContext.Provider value={(mockUser as UserI | null)}>
-      <div className="min-h-screen bg-white  ">
-        <Header />
-        <Sidebar className="w-64 sm:translate-x-0" />
-        <main className="p-4 bg-white md:ml-64 pt-16">
-          <Outlet />
-        </main>
-      </div>
-    </UserDataContext.Provider>
+    <div className="min-h-screen bg-white">
+      <Header />
+      <Sidebar className="w-64 sm:translate-x-0" />
+      <main className="p-4 bg-white md:ml-64 pt-16">
+        <Outlet />
+      </main>
+    </div>
   );
 };
 

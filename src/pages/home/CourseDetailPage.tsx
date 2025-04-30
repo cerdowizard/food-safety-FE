@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { trainingCourses, purchasedCourses } from "../constants";
+import { trainingCourses, purchasedCourses } from "../../constants";
 import { Play, BookOpen, Clock, ChevronLeft, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
