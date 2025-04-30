@@ -5,7 +5,6 @@ import {
   Bell,
   Settings,
   X,
-  FileText,
   GraduationCap,
   UserCircle,
   LogOut,
@@ -34,13 +33,6 @@ const Sidebar = ({ className }: SidebarProps) => {
       title: "Dashboard",
       icon: <LayoutDashboard className="w-5 h-5" />,
       path: "/dashboard",
-    },
-    {
-      title: "Reports",
-      icon: <FileText className="w-5 h-5" />,
-      path: "/reports",
-      badge: "4",
-      badgeColor: "bg-red-500 text-white",
     },
     {
       title: "Checklist",

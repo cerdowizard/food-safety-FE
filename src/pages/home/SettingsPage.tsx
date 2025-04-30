@@ -1,10 +1,9 @@
-import { useState, useContext } from "react";
-import UserDataContext from "../contexts/UserDataContext";
-import { UserI } from "../types/auth/user.type";
+import { useState } from "react";
+import { useUserData } from "../../contexts/UserDataContext";
 import { Bell, Lock, User } from "lucide-react";
 
 const SettingsPage = () => {
-  const user = useContext<UserI | null>(UserDataContext);
+  const { user } = useUserData();
 
   const [notificationPreferences, setNotificationPreferences] = useState({
     email: true,
@@ -117,7 +116,7 @@ const SettingsPage = () => {
                     </label>
                     <input
                       type="email"
-                      value={user?.email || ""}
+                      value={user?.user_email || ""}
                       readOnly
                       className="flex-1 px-3 py-2 rounded-lg bg-gray-100 text-gray-900 border-gray-300 cursor-not-allowed"
                     />

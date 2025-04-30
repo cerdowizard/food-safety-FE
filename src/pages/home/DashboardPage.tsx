@@ -1,24 +1,22 @@
-import { useState, useContext, useEffect } from "react";
-import UserDataContext from "../contexts/UserDataContext";
+import { useState, useEffect, useContext } from "react";
+import UserDataContext from "../../contexts/UserDataContext";
 import {
   mockApiService,
   // Reminder
-} from "../services/mock/adminMockApi";
-import adminStore, { Task } from "../stores/adminStore";
+} from "../../services/mock/adminMockApi";
+import adminStore, { Task } from "../../stores/adminStore";
 
 import {
   ClipboardCheck,
   ThermometerSun,
-  Trash2,
-  Bug,
+  Settings,
   Bell,
-  BookOpen,
+  ListCheck,
   Check,
   AlertCircle,
   // X,
 } from "lucide-react";
-import { UserI } from "../types/auth/user.type";
-import QuickActionButton from "../components/QuickActionButton";
+import QuickActionButton from "../../components/QuickActionButton";
 
 // Add this interface near the top of your file
 interface FreezerType {
@@ -28,7 +26,10 @@ interface FreezerType {
 
 const DashboardPage = () => {
   const { fetchTasks } = adminStore();
-  const user = useContext<UserI | null>(UserDataContext);
+  // const { user } = useUserData(); // Replace the useContext line with this
+  const userData = useContext(UserDataContext);
+  const auth = userData
+  console.log(auth);
   const [tasks, setTasks] = useState<Task[]>([]);
   // const [reminders, setReminders] = useState<Reminder[]>([]);
   // const [isLoading, setIsLoading] = useState(true);
@@ -85,29 +86,22 @@ const DashboardPage = () => {
 
   const quickActions = [
     {
-      icon: Trash2,
-      label: "Log Waste",
-      onClick: () => {
-        /* Handle waste logging */
-      },
-    },
-    {
-      icon: Bug,
-      label: "Report Pest",
+      icon: Settings,
+      label: "Settings",
       onClick: () => {
         /* Handle pest reporting */
       },
     },
     {
-      icon: BookOpen,
-      label: "Guidelines",
+      icon: ListCheck,
+      label: "Checklist",
       onClick: () => {
-        /* Handle guidelines view */
+        /* Handle reminders */
       },
     },
     {
       icon: Bell,
-      label: "Reminders",
+      label: "Notifications",
       onClick: () => {
         /* Handle reminders */
       },
@@ -128,7 +122,7 @@ const DashboardPage = () => {
         {/* User Greeting Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            {getGreeting()}, {user?.first_name}
+            {getGreeting()}, {auth.user?.first_name || "Lowkey"}
           </h1>
           <p className="mt-2 text-gray-600">
             Your daily food safety tasks and activities

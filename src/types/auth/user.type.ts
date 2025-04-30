@@ -2,11 +2,14 @@ export interface UserI {
   id: string;
   first_name: string;
   last_name: string;
-  email: string;
+  user_email: string;
   address: string;
   city: string;
   state: string;
-  role: "ADMIN" | "USER";
+  org_id?: string;
+  access_token?: string;
+  refresh_token?: string;
+
 }
 
 // Login payload interface

@@ -1,15 +1,14 @@
-import { useState, useContext } from "react";
-import UserDataContext from "../contexts/UserDataContext";
-import { UserI } from "../types/auth/user.type";
+import { useState } from "react";
+import { useUserData } from "../../contexts/UserDataContext";
 import { User, Mail } from "lucide-react";
 
 const ProfilePage = () => {
-  const user = useContext<UserI | null>(UserDataContext);
+  const { user } = useUserData();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileData, setProfileData] = useState({
     firstName: user?.first_name || "",
     lastName: user?.last_name || "",
-    email: user?.email || "",
+    email: user?.user_email || "",
   });
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

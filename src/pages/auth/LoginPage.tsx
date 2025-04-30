@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import display5 from "../../assets/display5.jpg";
 import display6 from "../../assets/display6.jpg";
@@ -9,6 +9,7 @@ import { contentDataLogin } from "../../constants";
 import axiosInstance from "../../services/real/api.ts";
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
+import { useUserData } from "../../contexts/UserDataContext";
 
 interface LoginPayload {
   email : string,
@@ -21,6 +22,7 @@ interface ErrorResponse {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { setUser} = useUserData();
   const [showPassword, setShowPassword] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -40,6 +42,14 @@ const LoginPage = () => {
     return () => clearInterval(textInterval);
   }, []);
 
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      const userData = JSON.parse(savedUser);
+      setUser(userData);
+    }
+  }, []);
+
   const [payload, setPayload] = useState<LoginPayload>({
     email: "",
     password: "",
@@ -56,24 +66,31 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log('clicked');
       const response = await axiosInstance.post('/api/v1/login', payload);
+      // console.log('Login response:', response.data); // Debug response
 
-      // Check if the request was successful according to your API's definition
       if (response.data.is_success) {
+        const userData = response.data.payload;
+
+        // Update localStorage first
+        localStorage.setItem('user', JSON.stringify(userData));
+
+        // Update context state
+        setUser(userData);
+
+        // Show success message
         toast.success(response.data.message);
-        console.log(response);
-        navigate("/dashboard");
+
+        // Navigate to dashboard
+        navigate("/dashboard", { replace: true });
       } else {
-        // This is when the API returns is_success: false
         toast.error(response.data.message);
         setError(response.data.message);
       }
     } catch (error) {
-      // This will catch network errors or 500-type server errors
       const err = error as AxiosError<ErrorResponse>;
-      // Try to get the error message from the response if it exists
       const errorMessage = err.response?.data?.message || err.message;
+      console.error('Login error:', error); // Debug error
       toast.error(errorMessage);
       setError(errorMessage);
     }
@@ -196,7 +213,7 @@ const LoginPage = () => {
             <div className="lg:hidden absolute -top-4 -right-4 w-24 h-24 bg-green-500/10 rounded-full blur-2xl"></div>
             <div className="lg:hidden absolute -bottom-4 -left-4 w-32 h-32 bg-green-500/10 rounded-full blur-2xl"></div>
 
-            <form className="space-y-6 relative" >
+            <form onSubmit={handleSubmit} className="space-y-6 relative">
               {/* Email Input */}
               <div>
                 <label
@@ -278,7 +295,6 @@ const LoginPage = () => {
 
               <div>
                 <button
-                    onClick={handleSubmit}
                   type="submit"
                   className="w-full flex justify-center py-4 sm:py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-xl font-bold text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-95"
                 >

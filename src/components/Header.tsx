@@ -17,6 +17,7 @@
 
 import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import UserDataContext from "../contexts/UserDataContext";
 import {
   Bell,
   ChevronDown,
@@ -27,33 +28,33 @@ import {
   Menu,
   X,
   LayoutDashboard,
-  FileText,
   GraduationCap,
   ListCheck,
 } from "lucide-react";
-import UserDataContext from "../contexts/UserDataContext";
-import { UserI } from "../types/auth/user.type";
+import { useUserData } from "../contexts/UserDataContext";
 import Cookies from "js-cookie";
-
-// Remove Sidebar import as we're integrating it
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useContext<UserI | null>(UserDataContext);
+  const { logout } = useUserData(); // Use the custom hook instead of useContext
 
   // State management
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const auth = useContext(UserDataContext);
+
 
   // Refs for click outside detection
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Auth store integration
   const onLogout = () => {
-    Cookies.remove("token")
+    Cookies.remove("token");
+    logout(); // Use the logout function from context
     navigate("/auth/login");
+    console.log('Clicked')
   };
 
   // Add navigation items
@@ -62,13 +63,6 @@ const Header = () => {
       title: "Dashboard",
       icon: <LayoutDashboard className="w-5 h-5" />,
       path: "/dashboard",
-    },
-    {
-      title: "Reports",
-      icon: <FileText className="w-5 h-5" />,
-      path: "/reports",
-      badge: "4",
-      badgeColor: "bg-red-500 text-white",
     },
     {
       title: "Checklist",
@@ -182,15 +176,15 @@ const Header = () => {
                   >
                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg">
                       <span className="text-white text-lg font-semibold">
-                        {user?.first_name?.[0]}
-                        {user?.last_name?.[0]}
+                        {auth.user?.first_name?.[0]}
+                        {auth.user?.last_name?.[0]}
                       </span>
                     </div>
                     <div className="hidden md:block text-left">
                       <p className="text-sm font-semibold text-gray-900">
-                        {user?.first_name} {user?.last_name}
+                        {auth.user?.first_name} {auth.user?.last_name}
                       </p>
-                      <p className="text-xs text-gray-500">{user?.email}</p>
+                      <p className="text-xs text-gray-500">{auth.user?.user_email}</p>
                     </div>
                     <ChevronDown
                       className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${
@@ -207,7 +201,7 @@ const Header = () => {
                           Signed in as
                         </p>
                         <p className="text-sm text-gray-500 truncate">
-                          {user?.email}
+                          {auth.user?.user_email}
                         </p>
                       </div>
                       <button
@@ -263,15 +257,15 @@ const Header = () => {
             <div className="flex items-center space-x-3">
               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
                 <span className="text-white text-lg font-semibold">
-                  {user?.first_name?.[0]}
-                  {user?.last_name?.[0]}
+                  {auth.user?.first_name?.[0]}
+                  {auth.user?.last_name?.[0]}
                 </span>
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">
-                  {user?.first_name} {user?.last_name}
+                  {auth.user?.first_name} {auth.user?.last_name}
                 </p>
-                <p className="text-xs text-gray-500">{user?.email}</p>
+                <p className="text-xs text-gray-500">{auth.user?.user_email}</p>
               </div>
             </div>
           </div>

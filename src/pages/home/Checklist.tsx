@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CheckCircle, AlertCircle } from "lucide-react";
-import ScoreCard from "../components/checklist/ScoreCard";
+import ScoreCard from "../../components/checklist/ScoreCard";
 
 interface ChecklistItem {
   id: string;
