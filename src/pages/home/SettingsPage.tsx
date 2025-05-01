@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { useUserData } from "../../contexts/UserDataContext";
-import { Bell, Lock, User } from "lucide-react";
+import { Lock, User } from "lucide-react";
 
 const SettingsPage = () => {
   const { user } = useUserData();
-
-  const [notificationPreferences, setNotificationPreferences] = useState({
-    email: true,
-    sms: false,
-    push: true,
-  });
 
   // State for Change Password
   const [changePasswordData, setChangePasswordData] = useState({
@@ -19,13 +13,6 @@ const SettingsPage = () => {
   });
 
   const [passwordError, setPasswordError] = useState("");
-
-  const handleNotificationChange = (type: string) => {
-    setNotificationPreferences(prev => ({
-      ...prev,
-      [type]: !prev[type as keyof typeof notificationPreferences],
-    }));
-  };
 
   // Handle Change Password
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +50,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen py-8 bg-gray-50">
+    <div className="min-h-screen py-8 bg-white">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-8">
@@ -120,85 +107,6 @@ const SettingsPage = () => {
                       readOnly
                       className="flex-1 px-3 py-2 rounded-lg bg-gray-100 text-gray-900 border-gray-300 cursor-not-allowed"
                     />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Notification Preferences */}
-            <div className="rounded-xl shadow-lg bg-white">
-              <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center">
-                  <Bell className="h-5 w-5 text-green-500" />
-                  <h2 className="ml-2 text-lg font-semibold text-gray-900">
-                    Notification Preferences
-                  </h2>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      Email Notifications
-                    </span>
-                    <button
-                      onClick={() => handleNotificationChange("email")}
-                      className={`w-10 h-6 rounded-full p-1 transition-colors ${
-                        notificationPreferences.email
-                          ? "bg-green-500"
-                          : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                          notificationPreferences.email
-                            ? "translate-x-4"
-                            : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      SMS Notifications
-                    </span>
-                    <button
-                      onClick={() => handleNotificationChange("sms")}
-                      className={`w-10 h-6 rounded-full p-1 transition-colors ${
-                        notificationPreferences.sms
-                          ? "bg-green-500"
-                          : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                          notificationPreferences.sms
-                            ? "translate-x-4"
-                            : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      Push Notifications
-                    </span>
-                    <button
-                      onClick={() => handleNotificationChange("push")}
-                      className={`w-10 h-6 rounded-full p-1 transition-colors ${
-                        notificationPreferences.push
-                          ? "bg-green-500"
-                          : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                          notificationPreferences.push
-                            ? "translate-x-4"
-                            : "translate-x-0"
-                        }`}
-                      />
-                    </button>
                   </div>
                 </div>
               </div>

@@ -2,7 +2,7 @@ import { CircleDashed } from "lucide-react";
 
 const LoadingSpinner = () => {
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+    <div className="fixed inset-0 flex flex-col items-center justify-center min-h-screen bg-white">
       {/* Loading Animation Container */}
       <div className="relative flex flex-col items-center">
         {/* Primary Spinner */}

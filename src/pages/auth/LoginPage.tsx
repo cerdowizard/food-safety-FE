@@ -77,6 +77,8 @@ const LoginPage = () => {
         const token = response.data.payload?.access_token
         console.log('token:', token);
 
+        localStorage.setItem('user', JSON.stringify(userData));
+
         // Update localStorage first
         localStorage.setItem('access-token', token);
 

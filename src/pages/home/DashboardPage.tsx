@@ -18,14 +18,13 @@ import {
 } from "lucide-react";
 import QuickActionButton from "../../components/QuickActionButton";
 import { useNavigate } from "react-router-dom";
+import ScoreCard from "../../components/checklist/ScoreCard";
 
 // Add this interface near the top of your file
 interface FreezerType {
   name: string;
   target: string;
 }
-
-
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -80,6 +79,7 @@ const DashboardPage = () => {
     }
 
   },[navigate])
+
   const handleTaskCompletion = async (taskId: string) => {
     try {
       const task = tasks.find(t => t.id === taskId);
@@ -102,6 +102,7 @@ const DashboardPage = () => {
       label: "Settings",
       onClick: () => {
         /* Handle pest reporting */
+        navigate("/settings");
       },
     },
     {
@@ -109,6 +110,7 @@ const DashboardPage = () => {
       label: "Checklist",
       onClick: () => {
         /* Handle reminders */
+        navigate("/checklist");
       },
     },
     {
@@ -116,6 +118,7 @@ const DashboardPage = () => {
       label: "Notifications",
       onClick: () => {
         /* Handle reminders */
+        navigate("/notifications");
       },
     },
   ];
@@ -127,6 +130,11 @@ const DashboardPage = () => {
     if (hour < 18) return "Good Afternoon";
     return "Good Evening";
   };
+
+  // Add these calculations for the ScoreCard
+  const completedTasks = tasks.filter(item => item.isCompleted);
+  const totalTasks = tasks.length;
+  const score = completedTasks.length;
 
   return (
     <div className="min-h-screen py-8">
@@ -141,7 +149,40 @@ const DashboardPage = () => {
           </p>
         </div>
 
-        {/* Main Content Grid */}
+        {/* Overview and Quick Actions Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Overview Section - Takes up 2/3 of the space */}
+          <div className="lg:col-span-2">
+            <ScoreCard
+              score={score}
+              totalTasks={totalTasks}
+              completedTasks={completedTasks.length}
+            />
+          </div>
+
+          {/* Quick Actions Section - Takes up 1/3 of the space */}
+          <div className="bg-white rounded-xl shadow-sm">
+            <div className="p-6 border-b border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Quick Actions
+              </h2>
+            </div>
+            <div className="p-4">
+              <div className="grid grid-cols-2 gap-4">
+                {quickActions.map((action, index) => (
+                  <QuickActionButton
+                    key={index}
+                    icon={action.icon}
+                    label={action.label}
+                    onClick={action.onClick}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Rest of your existing grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-8">
           {/* Tasks Section - Larger */}
           <div className="lg:col-span-4 space-y-8">
@@ -338,26 +379,7 @@ const DashboardPage = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="bg-white rounded-xl shadow-sm">
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Quick Actions
-                </h2>
-              </div>
-              <div className="p-4">
-                <div className="grid grid-cols-2 gap-4">
-                  {quickActions.map((action, index) => (
-                    <QuickActionButton
-                      key={index}
-                      icon={action.icon}
-                      label={action.label}
-                      onClick={action.onClick}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
