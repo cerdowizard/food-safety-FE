@@ -25,15 +25,15 @@ const AppRoutes = () => {
         <Routes>
           {/* Public Routes */}
           <Route element={<AuthLayout />}>
+            <Route path="/" element={<LoginPage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/sign-up" element={<SignUpPage />} />
-            // <Route path="/auth/admin/sign-up-user" element={<SignUpUser />} />
+            <Route path="/auth/admin/sign-up-user" element={<SignUpUser />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Route>
 
           {/* Protected Routes */}
           <Route element={<MainLayout />}>
-            <Route path="/" element={<DashboardPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/training" element={<TrainingPage />} />
             <Route path="/settings" element={<SettingsPage />} />

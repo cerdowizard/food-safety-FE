@@ -17,6 +17,7 @@ import {
   // X,
 } from "lucide-react";
 import QuickActionButton from "../../components/QuickActionButton";
+import { useNavigate } from "react-router-dom";
 
 // Add this interface near the top of your file
 interface FreezerType {
@@ -24,7 +25,10 @@ interface FreezerType {
   target: string;
 }
 
+
+
 const DashboardPage = () => {
+  const navigate = useNavigate();
   const { fetchTasks } = adminStore();
   // const { user } = useUserData(); // Replace the useContext line with this
   const userData = useContext(UserDataContext);
@@ -68,6 +72,14 @@ const DashboardPage = () => {
     fetchData();
   }, [fetchTasks]);
 
+  // secure route
+  useEffect(()=>{
+    const token = localStorage.getItem("access-token");
+    if(!token){
+      navigate('/auth/login')
+    }
+
+  },[navigate])
   const handleTaskCompletion = async (taskId: string) => {
     try {
       const task = tasks.find(t => t.id === taskId);

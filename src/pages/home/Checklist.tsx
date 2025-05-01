@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState , useContext} from "react";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import ScoreCard from "../../components/checklist/ScoreCard";
+import axiosInstance from "../../services/real/api";
+import UserDataContext from "../../contexts/UserDataContext";
 
 interface ChecklistItem {
   id: string;
@@ -14,6 +16,8 @@ interface ChecklistItem {
 }
 
 const Checklist = () => {
+
+  const auth = useContext(UserDataContext)
   const [checklist, setChecklist] = useState<ChecklistItem[]>([
     {
       id: "1",
@@ -81,6 +85,7 @@ const Checklist = () => {
     },
   ]);
 
+
   const [activeTab, setActiveTab] = useState<"todo" | "completed">("todo");
 
   // Add new state for priority filter
@@ -101,6 +106,39 @@ const Checklist = () => {
       }, 300);
     }
   };
+
+
+
+  useEffect(() => {
+    const getCheckList = async() => {
+      try {
+        const response = await axiosInstance.get('/api/v1/get_assign_checklist?status=all', {
+          headers: {
+            Authorization: `Bearer ${auth?.user?.access_token}`,
+          }
+        });
+        console.log(response.data.payload);
+
+        // Map backend data to frontend structure
+        const mappedChecklist = response.data.payload.map((item: any) => ({
+          id: item.id,
+          title: item.task_name,
+          description: item.task_description,
+          category: item.category,
+          isCompleted: item.is_completed,
+          priority: item.task_type,
+          dueDate: item.due_date,
+          points: item.task_points,
+        }));
+
+        setChecklist(mappedChecklist);
+      } catch (error) {
+        console.error("Error fetching checklist:", error);
+      }
+    };
+
+    getCheckList();
+  }, [auth?.user?.access_token]);
 
   const completedTasks = checklist.filter(item => item.isCompleted);
   const todoTasks = checklist.filter(item => !item.isCompleted);
