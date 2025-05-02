@@ -16,7 +16,7 @@
  */
 
 import { useState, useEffect, useRef, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import UserDataContext from "../contexts/UserDataContext";
 import {
   Bell,
@@ -32,7 +32,6 @@ import {
   ListCheck,
 } from "lucide-react";
 import { useUserData } from "../contexts/UserDataContext";
-import Cookies from "js-cookie";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -51,7 +50,7 @@ const Header = () => {
 
   // Auth store integration
   const onLogout = () => {
-    Cookies.remove("token");
+    localStorage.removeItem("access-token");
     logout(); // Use the logout function from context
     navigate("/auth/login");
     console.log('Clicked')
@@ -163,10 +162,10 @@ const Header = () => {
             <div className="flex items-center space-x-6">
               {/* Show notifications and profile on desktop only */}
               <div className="hidden md:flex items-center space-x-6">
-                <button className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
+                <Link to={'/notifications'} className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
                   <Bell className="h-6 w-6 text-gray-600" />
                   <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full ring-2 ring-white" />
-                </button>
+                </Link>
 
                 {/* User Profile Dropdown */}
                 <div ref={dropdownRef} className="relative">

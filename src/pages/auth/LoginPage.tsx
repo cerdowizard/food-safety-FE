@@ -71,9 +71,16 @@ const LoginPage = () => {
 
       if (response.data.is_success) {
         const userData = response.data.payload;
+        const userRole = userData.role;
+        console.log('userRole:', userRole);
+        console.log('userData:', userData);
+        const token = response.data.payload?.access_token
+        console.log('token:', token);
+
+        localStorage.setItem('user', JSON.stringify(userData));
 
         // Update localStorage first
-        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('access-token', token);
 
         // Update context state
         setUser(userData);
@@ -82,7 +89,12 @@ const LoginPage = () => {
         toast.success(response.data.message);
 
         // Navigate to dashboard
+        if(userRole === 'staff'){
         navigate("/dashboard", { replace: true });
+      }else if(userRole === 'admin'){
+        navigate("/admin/dashboard", { replace: true });
+      }
+
       } else {
         toast.error(response.data.message);
         setError(response.data.message);

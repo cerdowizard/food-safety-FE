@@ -44,6 +44,7 @@ const OverViewTab = ({activeTab, completedTasks, pendingTasks, completionRate, c
   }, {} as Record<string, { total: number; completed: number }>);
 
 
+
   return (
     <div>
         {/* Overview Tab Content */}
@@ -57,11 +58,52 @@ const OverViewTab = ({activeTab, completedTasks, pendingTasks, completionRate, c
                 completedTasks={completedTasks.length}
               />
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="text-gray-500 text-sm">Pending Tasks</h3>
                   <AlertCircle className="h-5 w-5 text-orange-500" />
                 </div>
-                <p className="text-3xl font-bold mt-2">{pendingTasks.length}</p>
+                <div className="flex flex-col">
+                  <p className="text-3xl font-bold mb-4">{pendingTasks.length}</p>
+                  {pendingTasks.length > 0 ? (
+                    <div className="space-y-3 max-h-[200px] overflow-y-auto">
+                      {pendingTasks.slice(0, 5).map((task) => (
+                        <div
+                          key={task.id}
+                          className="flex items-start p-2 rounded-lg bg-orange-50"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {task.title}
+                            </p>
+                            <div className="flex items-center mt-1">
+                              <span className={`
+                                px-2 py-1 text-xs rounded-full
+                                ${task.priority === 'high'
+                                  ? 'bg-red-100 text-red-700'
+                                  : task.priority === 'medium'
+                                  ? 'bg-orange-100 text-orange-700'
+                                  : 'bg-green-100 text-green-700'
+                                }
+                              `}>
+                                {task.priority}
+                              </span>
+                              <span className="ml-2 text-xs text-gray-500">
+                                Due: {new Date(task.dueDate).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {pendingTasks.length > 5 && (
+                        <button className="text-sm text-blue-600 hover:text-blue-800 mt-2">
+                          View all {pendingTasks.length} tasks
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500">No pending tasks</p>
+                  )}
+                </div>
               </div>
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center justify-between">

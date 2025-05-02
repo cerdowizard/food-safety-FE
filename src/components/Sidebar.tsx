@@ -20,6 +20,11 @@ const Sidebar = ({ className }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation(); // Add this for tracking current route
 
+  const handleSignOut = () => {
+    localStorage.removeItem('access-token');
+    navigate('/auth/login');
+  };
+
   interface NavItem {
     title: string;
     icon: ReactNode;
@@ -90,6 +95,10 @@ const Sidebar = ({ className }: SidebarProps) => {
                   href={item.path}
                   onClick={e => {
                     e.preventDefault();
+                    if (item.path === '/auth/login') {
+                      handleSignOut();
+                      return;
+                    }
                     navigate(item.path);
                   }}
                   className={`flex items-center p-2 rounded-lg group transition-colors duration-200
@@ -136,7 +145,7 @@ const Sidebar = ({ className }: SidebarProps) => {
                     onClick={e => {
                       e.preventDefault();
                       if (item.title === "Sign Out") {
-                        // Add your logout logic here
+                        handleSignOut();
                         return;
                       }
                       navigate(item.path);
@@ -203,9 +212,7 @@ const Sidebar = ({ className }: SidebarProps) => {
               </Link>
 
               <button
-                onClick={() => {
-                  // Add your logout logic here
-                }}
+                onClick={handleSignOut}
                 className="flex items-center w-full p-2 rounded-lg
                   bg-rose-50 text-rose-600 hover:bg-rose-100
                   transition-colors duration-200"

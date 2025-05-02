@@ -1,5 +1,6 @@
 import { InfoIcon, Download } from "lucide-react";
 import CircularProgress from "./CircularProgress";
+import { Link } from "react-router-dom";
 
 interface ScoreCardProps {
   score: number;
@@ -80,8 +81,8 @@ const ScoreCard = ({ score, totalTasks, completedTasks }: ScoreCardProps) => {
           <option>This Week</option>
           <option>This Month</option>
         </select>
-        <a
-          href="#"
+        <Link
+          to="/checklist"
           className="text-sm font-medium text-green-600 hover:text-green-700 flex items-center justify-center sm:justify-start"
         >
           View Details
@@ -94,7 +95,7 @@ const ScoreCard = ({ score, totalTasks, completedTasks }: ScoreCardProps) => {
           >
             <path d="M9 18l6-6-6-6" />
           </svg>
-        </a>
+        </Link>
       </div>
     </div>
   );
