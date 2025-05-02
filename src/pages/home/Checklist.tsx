@@ -6,7 +6,7 @@ import UserDataContext from "../../contexts/UserDataContext";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { toast } from "react-toastify";
 
-interface ChecklistItem {
+export interface ChecklistItem {
   id: string;
   title: string;
   description: string;
@@ -109,6 +109,9 @@ const Checklist = () => {
 
     return filtered;
   };
+
+  // Add this before the main return statement
+  const tasksToShow = filterTasks();
 
   return (
     <div className="min-h-screen py-8">
@@ -245,66 +248,95 @@ const Checklist = () => {
             )}
 
             {/* Checklist Cards */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-6">
-              {filterTasks().map(item => (
-                <div
-                  id={`task-${item.id}`}
-                  key={item.id}
-                  className="task-card bg-white rounded-xl shadow-sm overflow-hidden"
-                >
-                  <div
-                    className={`px-6 py-4 text-white ${
-                      item.priority === "high"
-                        ? "bg-red-50"
-                        : item.priority === "medium"
-                        ? "bg-orange-50"
-                        : "bg-green-50"
-                    }`}
-                  >
-                    <div className="flex justify-between text-black items-center">
-                      <span>{item.category}</span>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full priority-${item.priority}`}
-                      >
-                        {item.priority} priority
-                      </span>
-                    </div>
+            {tasksToShow.length === 0 ? (
+              <div className="min-h-[400px] flex flex-col items-center justify-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div className="relative">
+                  <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                    <AlertCircle className="h-12 w-12 text-gray-300" />
                   </div>
-                  <div className="p-6">
-                    <div className="flex items-start">
-                      <input
-                        type="checkbox"
-                        checked={item.isCompleted}
-                        onChange={() => handleCheckItem(item)} // Pass the whole item object
-                        className="h-5 w-5 mt-1 rounded border-gray-300"
-                      />
-                      <div className="ml-3 flex-1">
-                        <p
-                          className={`text-base font-medium ${
-                            item.isCompleted
-                              ? "text-gray-400 line-through"
-                              : "text-gray-900"
-                          }`}
-                        >
-                          {item.title}
-                        </p>
-                        <p className="mt-1 text-sm text-gray-500">
-                          {item.description}
-                        </p>
-                        <div className="mt-4 flex items-center space-x-3">
-                          <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                            +{item.points} points
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            Due {new Date(item.dueDate).toLocaleDateString()}
+                  <div className="absolute -top-2 -right-2">
+                    <span className="flex h-4 w-4 items-center justify-center">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                  </div>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {activeTab === "completed" ? "No completed tasks yet" : "No tasks available"}
+                </h3>
+                <p className="text-gray-500 text-center max-w-sm">
+                  {activeTab === "completed"
+                    ? "Tasks you complete will appear here. Keep up the good work!"
+                    : "When new tasks are assigned, they will show up here."}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 gap-6">
+                {tasksToShow.map(item => {
+                  console.log(`Rendering Task ${item.id}: isCompleted = ${item.isCompleted}`);
+                  return (
+                    <div
+                      id={`task-${item.id}`}
+                      key={item.id}
+                      className="task-card bg-white rounded-xl shadow-sm overflow-hidden"
+                    >
+                      <div
+                        className={`px-6 py-4 text-white ${
+                          item.priority === "high"
+                            ? "bg-red-50"
+                            : item.priority === "medium"
+                            ? "bg-orange-50"
+                            : "bg-green-50"
+                        }`}
+                      >
+                        <div className="flex justify-between text-black items-center">
+                          <span>{item.category}</span>
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full priority-${item.priority}`}
+                          >
+                            {item.priority} priority
                           </span>
                         </div>
                       </div>
+                      <div className="p-6">
+                        <div className="flex items-start">
+                          <label className="relative flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={item.isCompleted}
+                              onChange={() => handleCheckItem(item)}
+                              className="w-5 h-5 text-green-500 rounded border-gray-300 focus:ring-green-500"
+                            />
+                            <CheckCircle
+                              className={`absolute w-5 h-5 text-white pointer-events-none transition-opacity
+                                ${item.isCompleted ? 'opacity-100' : 'opacity-0'}`}
+                            />
+                          </label>
+                          <div className="ml-3 flex-1">
+                            <p className={`text-base font-medium ${
+                              item.isCompleted ? "text-gray-400 line-through" : "text-gray-900"
+                            }`}>
+                              {item.title}
+                            </p>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {item.description}
+                            </p>
+                            <div className="mt-4 flex items-center space-x-3">
+                              <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                                +{item.points} points
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                Due {new Date(item.dueDate).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </>
         )}
       </div>

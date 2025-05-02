@@ -94,82 +94,9 @@ const AdminDashboard = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ChecklistItem | null>(null);
 
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([
-    {
-      id: "1",
-      title: "Check all refrigerator temperatures",
-      description:
-        "Record temperatures for all units. Must be below 4°C (40°F)",
-      category: "Temperature Control",
-      isCompleted: true,
-      priority: "high",
-      dueDate: "2025-03-10",
-      points: 3,
-      assignedTo: "john.doe",
-      completedBy: "john.doe",
-      completedAt: "2025-03-10T09:15:00",
-    },
-    {
-      id: "2",
-      title: "Sanitize food preparation surfaces",
-      description: "Clean and sanitize all prep areas with approved sanitizer",
-      category: "Sanitation",
-      isCompleted: false,
-      priority: "high",
-      dueDate: "2025-03-10",
-      points: 3,
-      assignedTo: "emma.smith",
-    },
-    {
-      id: "3",
-      title: "Inspect food storage areas for pests",
-      description:
-        "Check for signs of pest activity in dry storage and coolers",
-      category: "Pest Control",
-      isCompleted: false,
-      priority: "medium",
-      dueDate: "2025-03-15",
-      points: 3,
-      assignedTo: "sara.jones",
-    },
-    {
-      id: "4",
-      title: "Check employee hand washing stations",
-      description:
-        "Ensure soap, paper towels, and proper signage are available",
-      category: "Hygiene",
-      isCompleted: true,
-      priority: "medium",
-      dueDate: "2025-03-12",
-      points: 3,
-      assignedTo: "john.doe",
-      completedBy: "john.doe",
-      completedAt: "2025-03-11T14:30:00",
-    },
-    {
-      id: "5",
-      title: "Verify food labeling and dating",
-      description:
-        "Check all stored food items for proper labels and expiry dates",
-      category: "Food Storage",
-      isCompleted: false,
-      priority: "high",
-      dueDate: "2025-03-11",
-      points: 3,
-      assignedTo: "emma.smith",
-    },
-    {
-      id: "6",
-      title: "Clean and sanitize waste disposal areas",
-      description: "Clean bins, check for proper separation of waste types",
-      category: "Waste Management",
-      isCompleted: false,
-      priority: "medium",
-      dueDate: "2025-03-18",
-      points: 3,
-      assignedTo: "sara.jones",
-    },
-  ]);
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+
+
 
   const [checklistPayload, setChecklistPayload] = useState<ChecklistPayload>({
     title: "",
@@ -470,7 +397,7 @@ const AdminDashboard = () => {
 
 
           {/* Overview Tab */}
-        <OverViewTab activeTab={activeTab} completedTasks={completedTasks} pendingTasks={pendingTasks} completionRate={completionRate} checklist={checklist} users={users} />
+        <OverViewTab activeTab={activeTab} completedTasks={completedTasks} pendingTasks={pendingTasks} completionRate={completionRate || 0} checklist={checklist} users={users} />
 
         {/* Checklists Tab Content */}
         <AdminChecklistsTab activeTab={activeTab} checklist={checklist} setChecklist={setChecklist} openEditModal={openEditModal} deleteItem={deleteItem}/>

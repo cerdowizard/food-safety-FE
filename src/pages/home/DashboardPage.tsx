@@ -1,5 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import UserDataContext from "../../contexts/UserDataContext";
+import { ChecklistItem } from "./Checklist";
+import axiosInstance from "../../services/real/api";
+// import LoadingSpinner from "../../components/LoadingSpinner";
+
 import {
   mockApiService,
   // Reminder
@@ -27,6 +31,8 @@ interface FreezerType {
 }
 
 const DashboardPage = () => {
+    const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+    // const [isLoading, setIsLoading] = useState(true); // Add this line
   const navigate = useNavigate();
   const { fetchTasks } = adminStore();
   // const { user } = useUserData(); // Replace the useContext line with this
@@ -96,6 +102,7 @@ const DashboardPage = () => {
     }
   };
 
+
   const quickActions = [
     {
       icon: Settings,
@@ -131,9 +138,44 @@ const DashboardPage = () => {
     return "Good Evening";
   };
 
+  useEffect(() => {
+    const getCheckList = async() => {
+      try {
+        // setIsLoading(true); // Set loading to true before fetching
+        const response = await axiosInstance.get('/api/v1/get_assign_checklist?status=all', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access-token')}`,
+          }
+        });
+
+        console.log(response.data.payload);
+
+        // Map backend data to frontend structure
+        const mappedChecklist = response.data.payload.map((item: any) => ({
+          id: item.id,
+          title: item.task_name,
+          description: item.task_description,
+          category: item.category,
+          isCompleted: item.is_completed,
+          priority: item.task_type,
+          dueDate: item.due_date,
+          points: item.task_points,
+        }));
+
+        setChecklist(mappedChecklist);
+      } catch (error) {
+        console.error("Error fetching checklist:", error)
+      } finally {
+        // setIsLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    getCheckList();
+  }, [auth?.user?.access_token]);
+
+
   // Add these calculations for the ScoreCard
-  const completedTasks = tasks.filter(item => item.isCompleted);
-  const totalTasks = tasks.length;
+  const completedTasks = checklist.filter(item => item.isCompleted);
   const score = completedTasks.length;
 
   return (
@@ -153,11 +195,11 @@ const DashboardPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Overview Section - Takes up 2/3 of the space */}
           <div className="lg:col-span-2">
-            <ScoreCard
-              score={score}
-              totalTasks={totalTasks}
-              completedTasks={completedTasks.length}
-            />
+          <ScoreCard
+                score={score}
+                totalTasks={checklist.length}
+                completedTasks={completedTasks.length}
+              />
           </div>
 
           {/* Quick Actions Section - Takes up 1/3 of the space */}
