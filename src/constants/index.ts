@@ -54,7 +54,7 @@ export interface TrainingCourse {
   id: number;
   title: string;
   description: string;
-  duration: string; // Format: "X.X hours" 
+  duration: string; // Format: "X.X hours"
   level: "Beginner" | "Intermediate" | "Advanced";
   image: string;
 }

@@ -1,9 +1,11 @@
 import { Book, BookmarkCheck, Clock, PlayCircle } from "lucide-react";
-import { TrainingCourse, PurchasedCourse } from "../../constants";
+import { PurchasedCourse } from "../../constants";
+import { TrainingCourse } from "../../pages/home/TrainingPage";
+
 import { useNavigate } from "react-router-dom";
 
 type CourseCardProps = {
-  course: TrainingCourse | PurchasedCourse;
+  course: TrainingCourse ;
 };
 
 const CourseCard = ({ course }: CourseCardProps) => {
@@ -18,18 +20,18 @@ const CourseCard = ({ course }: CourseCardProps) => {
     <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <div className="relative h-48 cursor-pointer" onClick={handleCourseClick}>
         <img
-          src={course.image}
+          src={course.file_content}
           alt={course.title}
           className="w-full h-full object-cover"
         />
-        {isPurchased && (
+        {/* {isPurchased && (
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
             <div
               className="h-full bg-green-500 transition-all duration-300"
               style={{ width: `${(course as PurchasedCourse).progress}%` }}
             />
           </div>
-        )}
+        )} */}
       </div>
       <div className="p-5">
         <div className="flex items-center justify-between mb-2">
@@ -47,7 +49,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
           </span>
           {isPurchased && (
             <span className="text-sm text-gray-500">
-              {`${(course as PurchasedCourse).progress}% Complete`}
+              {`${(course).progress}% Complete`}
             </span>
           )}
         </div>
@@ -70,8 +72,8 @@ const CourseCard = ({ course }: CourseCardProps) => {
               {course.duration}
             </div>
 
-            <div className=" flex items-center gap-2">
-              {(course as PurchasedCourse).completed && (
+            {/* <div className=" flex items-center gap-2">
+              {(course).completed && (
                 <button className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
                   {" "}
                   <>
@@ -104,7 +106,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
                   ""
                 )}
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,14 +1,24 @@
 import { useState, useEffect } from "react";
-import { trainingCourses, purchasedCourses } from "../../constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useUserData } from "../../contexts/UserDataContext";
 import { Link } from "react-router-dom";
 import CourseCard from "../../components/training/CourseCard";
+import axiosInstance from "../../services/real/api";
+
+export interface TrainingCourse {
+  id: number;
+  title: string;
+  description: string;
+  duration: string; // Format: "X.X hours"
+  level: "Beginner" | "Intermediate" | "Advanced";
+  file_content: string;
+}
 
 const TrainingPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { user } = useUserData(); // Use the custom hook to get user data
-  const [activeTab, setActiveTab] = useState<"all" | "my-learning">("all");
+  // const [activeTab, setActiveTab] = useState("all");
+  const [trainingCourses, setTrainingCourses] = useState<TrainingCourse[]>([]);
 
   // Auto-advance carousel
   useEffect(() => {
@@ -16,7 +26,7 @@ const TrainingPage = () => {
       setCurrentSlide(prev => (prev + 1) % trainingCourses.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [trainingCourses.length]);
 
   const nextSlide = () => {
     setCurrentSlide(prev => (prev + 1) % trainingCourses.length);
@@ -27,6 +37,19 @@ const TrainingPage = () => {
       prev === 0 ? trainingCourses.length - 1 : prev - 1
     );
   };
+
+  useEffect(()=> {
+    const getAllCourses = async() =>{
+      try {
+        const response = await axiosInstance.get('/api/v1/course')
+        console.log(response.data)
+        setTrainingCourses(response.data?.payload)
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    }
+    getAllCourses()
+  },[])
 
   return (
     <>
@@ -62,7 +85,7 @@ const TrainingPage = () => {
               {/* Background Image */}
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${course.image})` }}
+                style={{ backgroundImage: `url(${course.file_content})` }}
               >
                 <div className="absolute inset-0 bg-black/50" />
               </div>
@@ -133,41 +156,22 @@ const TrainingPage = () => {
 
       {/* Learning lists */}
       <section className="mt-16 lg:mx-[3rem]">
-        {/* Tabs */}
+        {/* Tabs - Remove the My Learning tab */}
         <div className="border-b border-gray-200">
           <div className="flex space-x-8">
             <button
-              onClick={() => setActiveTab("all")}
-              className={`py-4 px-1 relative font-medium text-sm hover:text-green-600
-                ${
-                  activeTab === "all"
-                    ? "text-green-600 border-b-2 border-green-600"
-                    : "text-gray-500"
-                }`}
+              className="py-4 px-1 relative font-medium text-sm text-green-600 border-b-2 border-green-600"
             >
-              All Courses
-            </button>
-            <button
-              onClick={() => setActiveTab("my-learning")}
-              className={`py-4 px-1 relative font-medium text-sm hover:text-green-600
-                ${
-                  activeTab === "my-learning"
-                    ? "text-green-600 border-b-2 border-green-600"
-                    : "text-gray-500"
-                }`}
-            >
-              My Learning
+              Courses
             </button>
           </div>
         </div>
 
-        {/* Course Grid */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(activeTab === "all" ? trainingCourses : purchasedCourses).map(
-            course => (
-              <CourseCard key={course.id} course={course} />
-            )
-          )}
+        {/* Course Grid - Simplify to only show trainingCourses */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {trainingCourses.map(course => (
+            <CourseCard key={course.id} course={course} />
+          ))}
         </div>
       </section>
     </>
