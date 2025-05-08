@@ -3,7 +3,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useUserData } from "../../contexts/UserDataContext";
 import { Link } from "react-router-dom";
 import CourseCard from "../../components/training/CourseCard";
-import axiosInstance from "../../services/real/api";
 
 export interface TrainingCourse {
   id: number;
@@ -12,13 +11,103 @@ export interface TrainingCourse {
   duration: string; // Format: "X.X hours"
   level: "Beginner" | "Intermediate" | "Advanced";
   file_content: string;
+  active: boolean;
+  enrolled: boolean;
 }
+
+export const mockTrainingCourses: TrainingCourse[] = [
+  {
+    id: 1,
+    title: "Food Safety Basics",
+    description: "Learn the fundamental principles of food safety and handling",
+    duration: "2.5 hours",
+    level: "Beginner",
+    file_content: "https://images.unsplash.com/photo-1635321593217-40050ad13c74",
+    active: true,
+    enrolled: false
+  },
+  {
+    id: 2,
+    title: "Advanced Food Handling",
+    description: "Master advanced techniques in food handling and storage",
+    duration: "3.0 hours",
+    level: "Advanced",
+    file_content: "https://images.unsplash.com/photo-1499125562588-29fb8a56b5d5", // Updated image URL
+    active: true,
+    enrolled: false
+  },
+  {
+    id: 3,
+    title: "Kitchen Hygiene",
+    description: "Essential practices for maintaining kitchen hygiene",
+    duration: "1.5 hours",
+    level: "Beginner",
+    file_content: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4",
+    active: true,
+    enrolled: false
+  },
+  {
+    id: 4,
+    title: "Food Storage Guidelines",
+    description: "Learn proper food storage techniques and temperature control",
+    duration: "2.0 hours",
+    level: "Intermediate",
+    file_content: "https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9",
+    active: true,
+    enrolled: false
+  },
+  {
+    id: 5,
+    title: "Contamination Prevention",
+    description: "Strategies to prevent food contamination in professional settings",
+    duration: "2.5 hours",
+    level: "Intermediate",
+    file_content: "https://images.unsplash.com/photo-1585338107529-13afc5f02586", // Updated image URL
+    active: true,
+    enrolled: false
+  }
+];
+
+const getInitialCourses = () => {
+  const storedCourses = localStorage.getItem('trainingCourses');
+  if (storedCourses) {
+    return JSON.parse(storedCourses);
+  }
+  // If no stored courses, use the mock data
+  localStorage.setItem('trainingCourses', JSON.stringify(mockTrainingCourses));
+  return mockTrainingCourses;
+};
 
 const TrainingPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { user } = useUserData(); // Use the custom hook to get user data
-  // const [activeTab, setActiveTab] = useState("all");
-  const [trainingCourses, setTrainingCourses] = useState<TrainingCourse[]>([]);
+  const [activeTab, setActiveTab] = useState("all");
+  const [trainingCourses, setTrainingCourses] = useState<TrainingCourse[]>(getInitialCourses());
+
+  const handleEnroll = (courseId: number) => {
+    setTrainingCourses(prevCourses => {
+      const updatedCourses = prevCourses.map(course =>
+        course.id === courseId ? { ...course, enrolled: true } : course
+      );
+      // Save to localStorage whenever courses are updated
+      localStorage.setItem('trainingCourses', JSON.stringify(updatedCourses));
+      return updatedCourses;
+    });
+  };
+
+  const getEnrolledCount = (courses: TrainingCourse[]): number => {
+    return courses.filter(course => course.enrolled).length;
+  };
+
+  const getAvailableCount = (courses: TrainingCourse[]): number => {
+    return courses.filter(course => !course.enrolled).length;
+  };
+
+  // Reset courses function (optional - for testing)
+  // const resetCourses = () => {
+  //   localStorage.setItem('trainingCourses', JSON.stringify(mockTrainingCourses));
+  //   setTrainingCourses(mockTrainingCourses);
+  // };
 
   // Auto-advance carousel
   useEffect(() => {
@@ -37,19 +126,6 @@ const TrainingPage = () => {
       prev === 0 ? trainingCourses.length - 1 : prev - 1
     );
   };
-
-  useEffect(()=> {
-    const getAllCourses = async() =>{
-      try {
-        const response = await axiosInstance.get('/api/v1/course')
-        console.log(response.data)
-        setTrainingCourses(response.data?.payload)
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      }
-    }
-    getAllCourses()
-  },[])
 
   return (
     <>
@@ -156,22 +232,87 @@ const TrainingPage = () => {
 
       {/* Learning lists */}
       <section className="mt-16 lg:mx-[3rem]">
-        {/* Tabs - Remove the My Learning tab */}
+        {/* Tabs */}
         <div className="border-b border-gray-200">
           <div className="flex space-x-8">
             <button
-              className="py-4 px-1 relative font-medium text-sm text-green-600 border-b-2 border-green-600"
+              onClick={() => setActiveTab("all")}
+              className={`py-4 px-1 relative font-medium text-sm ${
+                activeTab === "all"
+                  ? "text-green-600 border-b-2 border-green-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
             >
-              Courses
+              All Courses
+              <span className="ml-2 px-2 py-0.5 bg-gray-100 rounded-full text-xs">
+                {getAvailableCount(trainingCourses)}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab("enrolled")}
+              className={`py-4 px-1 relative font-medium text-sm ${
+                activeTab === "enrolled"
+                  ? "text-green-600 border-b-2 border-green-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Enrolled
+              <span className="ml-2 px-2 py-0.5 bg-gray-100 rounded-full text-xs">
+                {getEnrolledCount(trainingCourses)}
+              </span>
             </button>
           </div>
         </div>
 
-        {/* Course Grid - Simplify to only show trainingCourses */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {trainingCourses.map(course => (
-            <CourseCard key={course.id} course={course} />
-          ))}
+        {/* Course Grid */}
+        <div className="mt-8">
+          {trainingCourses.filter(course => 
+            activeTab === "all" 
+              ? !course.enrolled 
+              : course.enrolled
+          ).length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100">
+                <svg 
+                  className="w-8 h-8 text-gray-400" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 20a8 8 0 100-16 8 8 0 000 16z" 
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-1">
+                {activeTab === "all" ? "No courses available" : "No enrolled courses"}
+              </h3>
+              <p className="text-gray-500">
+                {activeTab === "all" 
+                  ? "Check back later for new courses" 
+                  : "Start learning by enrolling in a course"}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {trainingCourses
+                .filter(course => 
+                  activeTab === "all" 
+                    ? !course.enrolled 
+                    : course.enrolled
+                )
+                .map(course => (
+                  <CourseCard 
+                    key={course.id} 
+                    course={course} 
+                    onEnroll={() => handleEnroll(course.id)}
+                  />
+                ))}
+            </div>
+          )}
         </div>
       </section>
     </>
