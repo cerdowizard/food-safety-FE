@@ -2,7 +2,6 @@ import { useState, ReactNode } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   LayoutDashboard,
-  Bell,
   Settings,
   X,
   GraduationCap,
@@ -52,13 +51,13 @@ const Sidebar = ({ className }: SidebarProps) => {
       badge: "New",
       badgeColor: "bg-blue-500 text-white",
     },
-    {
-      title: "Notifications",
-      icon: <Bell className="w-5 h-5" />,
-      path: "/notifications",
-      badge: "3",
-      badgeColor: "bg-red-500 text-white",
-    },
+    // {
+    //   title: "Notifications",
+    //   icon: <Bell className="w-5 h-5" />,
+    //   path: "/notifications",
+    //   badge: "3",
+    //   badgeColor: "bg-red-500 text-white",
+    // },
   ];
 
   const profileItems: NavItem[] = [

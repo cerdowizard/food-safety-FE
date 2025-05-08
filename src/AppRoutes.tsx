@@ -18,6 +18,8 @@ const NotificationPage = lazy(() => import("./pages/home/NotificationPage"));
 const SignUpPage = lazy(() => import("./pages/auth/SignUpPage"));
 const SignUpUser = lazy(() => import("./pages/auth/SignUpUser"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const CoursePage = lazy(() => import("./pages/course/CoursePage"));
+
 const AppRoutes = () => {
   return (
     <Router>
@@ -42,6 +44,7 @@ const AppRoutes = () => {
             <Route path="/notifications" element={<NotificationPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/course/:id" element={<CourseDetailPage />} />
+            <Route path="/course/:courseId" element={<CoursePage />} />
           </Route>
 
           {/* 404 Page */}

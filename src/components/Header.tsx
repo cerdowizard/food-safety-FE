@@ -76,13 +76,13 @@ const Header = () => {
       badge: "New",
       badgeColor: "bg-blue-500 text-white",
     },
-    {
-      title: "Notifications",
-      icon: <Bell className="w-5 h-5" />,
-      path: "/notifications",
-      badge: "3",
-      badgeColor: "bg-red-500 text-white",
-    },
+    // {
+    //   title: "Notifications",
+    //   icon: <Bell className="w-5 h-5" />,
+    //   path: "/notifications",
+    //   badge: "3",
+    //   badgeColor: "bg-red-500 text-white",
+    // },
     {
       title: "Settings",
       icon: <Settings className="w-5 h-5" />,
